@@ -2,25 +2,42 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MyFirstApp.MainPage"
-             Title="Фильмы">
+             Title="Фильмы"
+             BackgroundColor="#121212">
 
-    <StackLayout Padding="20">
-        <SearchBar Placeholder="Поиск..." Text="{Binding SearchQuery}" />
+    <StackLayout Padding="10">
+        <SearchBar Placeholder="Поиск..." Text="{Binding SearchQuery}"
+                   BackgroundColor="#1E1E1E" TextColor="White"
+                   PlaceholderColor="Gray" />
 
-        <Label Text="Фильмы:" FontSize="20" Margin="0,20,0,10"/>
-        <CollectionView ItemsSource="{Binding Movies}"
-    SelectionMode="Single"
-    SelectionChanged="OnMovieTapped">
+        <CollectionView x:Name="MoviesCollectionView"
+                        ItemsSource="{Binding Movies}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnMovieTapped">
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" />
+            </CollectionView.ItemsLayout>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout Padding="10">
-                        <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="18"/>
-                        <Label Text="{Binding Genre}" FontSize="14" TextColor="Gray"/>
-                    </StackLayout>
+                    <Frame CornerRadius="15" Padding="0" Margin="5"
+                           BackgroundColor="#1E1E1E"
+                           HasShadow="True">
+                        <StackLayout>
+                            <Image Source="{Binding Poster}" Aspect="AspectFit" HeightRequest="200"/>
+                            <StackLayout Padding="10">
+                                <Label Text="{Binding Title}"
+                                       FontAttributes="Bold"
+                                       FontSize="16"
+                                       TextColor="White"/>
+                                <Label Text="{Binding Genre}"
+                                       FontSize="14"
+                                       TextColor="Gray"/>
+                            </StackLayout>
+                        </StackLayout>
+                    </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
     </StackLayout>
 </ContentPage>
-
-

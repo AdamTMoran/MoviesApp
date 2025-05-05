@@ -474,3 +474,10 @@ C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\bin\Debug\net9.0-windows10.0.1
 C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\SQLitePCLRaw.core.dll
 C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\SQLitePCLRaw.provider.e_sqlite3.dll
 C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\e_sqlite3.dll
+C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\dark_knight.scale-100.jpg
+C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\inception.scale-100.jpg
+C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\bin\Debug\net9.0-windows10.0.19041.0\win10-x64\titanic.scale-100.jpg
+C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\dark_knight.scale-100.jpg
+C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\inception.scale-100.jpg
+C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\resizetizer\r\titanic.scale-100.jpg
+C:\Users\vital\source\repos\MyFirstApp\MyFirstApp\obj\Debug\net9.0-windows10.0.19041.0\win10-x64\MyFirstApp.sourcelink.json

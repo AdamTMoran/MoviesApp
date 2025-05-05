@@ -18,5 +18,6 @@ namespace MyFirstApp.Models
 
         [MaxLength(50)]
         public string Genre { get; set; }
+        public string Poster { get; set; }
     }
 }

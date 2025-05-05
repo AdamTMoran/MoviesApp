@@ -46,12 +46,16 @@ namespace MyFirstApp.Services
             await db.DeleteAllAsync<Movie>();
             await db.DeleteAllAsync<Actor>();
 
+
+
+
             // 1. Добавим фильмы
             var movies = new List<Movie>
     {
-        new Movie { Title = "Inception", Genre = "Sci-Fi" },
-        new Movie { Title = "Titanic", Genre = "Drama" },
-        new Movie { Title = "The Dark Knight", Genre = "Action" }
+        new Movie { Title = "Inception", Genre = "Sci-Fi", Poster = "inception.jpg" },
+    new Movie { Title = "Titanic", Genre = "Drama", Poster = "titanic.jpg" },
+    new Movie { Title = "The Dark Knight", Genre = "Action", Poster = "dark_knight.jpg" }
+
     };
             await db.InsertAllAsync(movies);
 
