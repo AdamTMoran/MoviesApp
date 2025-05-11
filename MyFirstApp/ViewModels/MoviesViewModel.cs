@@ -8,14 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using MyFirstApp.Models;
 using MyFirstApp.Services;
-
+using MyFirstApp.DTOs;
 
 namespace MyFirstApp.ViewModels
 {
     public class MoviesViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<Movie> Movies { get; set; } = new();
-
+        private readonly IMovieSearchService _searchService;
+        public ObservableCollection<MovieViewItem> Movies { get; set; } = new();
+       
         private string searchQuery;
         public string SearchQuery
         {
@@ -31,69 +32,65 @@ namespace MyFirstApp.ViewModels
             }
         }
 
+        public MoviesViewModel(IMovieSearchService searchService)
+        {
+            _searchService = searchService;
+        }
         // Метод загрузки всех фильмов
         public async Task LoadMoviesAsync()
         {
-            var db = DatabaseService.GetConnection();
-            var moviesFromDb = await db.Table<Movie>().ToListAsync();
+            var results = await _searchService.SearchMoviesAsync(""); // пустой запрос = все фильмы
 
             Movies.Clear();
-            foreach (var movie in moviesFromDb)
-                Movies.Add(movie);
+
+            foreach (var dto in results)
+            {
+                // Преобразование MovieDto в MovieViewItem
+                Movies.Add(new MovieViewItem
+                {
+                    Id = dto.Id,
+                    Title = dto.Title,
+                    Genre = dto.Genre,
+                    Poster = dto.Poster,
+                    Actors = dto.Actors
+                });
+            }
         }
 
         // Метод для поиска фильмов
         public async Task SearchMoviesAsync()
         {
-            var db = DatabaseService.GetConnection();
-            var query = searchQuery?.ToLower() ?? "";
-
-            // 1. Поиск фильмов по названию или жанру
-            var movieResults = await db.Table<Movie>()
-                .Where(m => m.Title.ToLower().Contains(query)
-                            || m.Genre.ToLower().Contains(query))
-                .ToListAsync();
-
-            // 2. Поиск фильмов по актёрам
-            var actorMatches = await db.Table<Actor>()
-                .Where(a => a.Name.ToLower().Contains(query))
-                .ToListAsync();
-
-            if (actorMatches.Any())
-            {
-                // Получим MovieId для каждого найденного актёра
-                var actorIds = actorMatches.Select(a => a.Id).ToList();
-
-                var movieActorLinks = await db.Table<MovieActor>()
-                    .Where(link => actorIds.Contains(link.ActorId))
-                    .ToListAsync();
-
-                var movieIdsFromActors = movieActorLinks.Select(link => link.MovieId);
-
-                // Добавим фильмы, связанные с актёрами
-                var moviesByActors = await db.Table<Movie>()
-                    .Where(m => movieIdsFromActors.Contains(m.Id))
-                    .ToListAsync();
-
-                // Объединим результаты
-                movieResults.AddRange(moviesByActors);
-            }
-
-            // Удалим дубликаты (если фильм есть в обоих результатах)
-            var distinct = movieResults
-                .GroupBy(m => m.Id)
-                .Select(g => g.First())
-                .ToList();
+            var results = await _searchService.SearchMoviesAsync(searchQuery);
 
             Movies.Clear();
-            foreach (var movie in distinct)
-                Movies.Add(movie);
-        }
 
+            foreach (var dto in results)
+            {
+                // Преобразование MovieDto в MovieViewItem
+                Movies.Add(new MovieViewItem
+                {
+                    Id = dto.Id,
+                    Title = dto.Title,
+                    Genre = dto.Genre,
+                    Poster = dto.Poster,
+                    Actors = dto.Actors
+                });
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged([CallerMemberName] string name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    }
+
+    // Вспомогательный класс для отображения фильма в UI
+    public class MovieViewItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Genre { get; set; } = "";
+        public string Poster { get; set; } = "";
+        public string Actors { get; set; } = ""; // Строка с именами актёров
     }
 }

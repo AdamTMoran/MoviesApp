@@ -28770,11 +28770,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\vital\\source\\repos\\MyFirstApp\\MyFirstApp\\MyFirstApp.csproj",
+      "projectUniqueName": "C:\\Users\\vital\\Source\\Repos\\MoviesApp3\\MyFirstApp\\MyFirstApp.csproj",
       "projectName": "MyFirstApp",
-      "projectPath": "C:\\Users\\vital\\source\\repos\\MyFirstApp\\MyFirstApp\\MyFirstApp.csproj",
+      "projectPath": "C:\\Users\\vital\\Source\\Repos\\MoviesApp3\\MyFirstApp\\MyFirstApp.csproj",
       "packagesPath": "C:\\Users\\vital\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\vital\\source\\repos\\MyFirstApp\\MyFirstApp\\obj\\",
+      "outputPath": "C:\\Users\\vital\\Source\\Repos\\MoviesApp3\\MyFirstApp\\obj\\",
       "projectStyle": "PackageReference",
       "crossTargeting": true,
       "fallbackFolders": [

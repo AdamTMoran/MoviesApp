@@ -4,7 +4,7 @@ namespace MyFirstApp
 {
     public partial class App : Application
     {
-        public App()
+        public App(MainPage mainPage)
         {
             InitializeComponent();
 
@@ -15,7 +15,7 @@ namespace MyFirstApp
             });
 
             // Это ВАЖНО: для навигации нужна оболочка NavigationPage
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(mainPage);
         }
 
     }

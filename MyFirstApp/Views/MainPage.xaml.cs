@@ -8,10 +8,10 @@ namespace MyFirstApp
     {
         private bool isLoaded = false;
 
-        public MainPage()
+        public MainPage(MoviesViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = new MoviesViewModel();
+            BindingContext = viewModel;
         }
 
         protected override async void OnAppearing()
@@ -27,11 +27,20 @@ namespace MyFirstApp
 
         private async void OnMovieTapped(object sender, SelectionChangedEventArgs e)
         {
-            if (e.CurrentSelection.FirstOrDefault() is Movie selectedMovie)
+            if (e.CurrentSelection.FirstOrDefault() is MovieViewItem selectedMovieViewItem)
             {
+                // Создаём Movie на основе данных из MovieViewItem
+                var movie = new Movie
+                {
+                    Id = selectedMovieViewItem.Id,
+                    Title = selectedMovieViewItem.Title,
+                    Genre = selectedMovieViewItem.Genre,
+                    Poster = selectedMovieViewItem.Poster
+                };
 
-                await Navigation.PushAsync(new MovieDetailPage(selectedMovie));
-                ((CollectionView)sender).SelectedItem = null; // ❗️Сброс выбора
+                // Навигация на детальную страницу фильма
+                await Navigation.PushAsync(new MovieDetailPage(movie));
+                ((CollectionView)sender).SelectedItem = null; // Сброс выбора
             }
         }
     }

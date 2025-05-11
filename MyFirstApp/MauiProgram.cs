@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
-
+using MyFirstApp.Services;
+using MyFirstApp.Models;
+using MyFirstApp.Views;
+using MyFirstApp.ViewModels;
 namespace MyFirstApp
 {
     public static class MauiProgram
@@ -18,7 +21,14 @@ namespace MyFirstApp
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
-
+            builder.Services.AddSingleton<IMovieSearchService, MovieSearchService>();
+            builder.Services.AddTransient<MoviesViewModel>();
+            builder.Services.AddTransient<MainPage>();
+            Task.Run(async () =>
+            {
+                await DatabaseService.InitAsync();
+                await DatabaseService.SeedDataAsync();
+            }).Wait();
             return builder.Build();
         }
     }

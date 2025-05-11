@@ -17,7 +17,7 @@ namespace MyFirstApp.ViewModels
         public MovieDetailViewModel(Movie movie)
         {
             Movie = movie;
-            LoadActorsAsync(movie.Id);  // Загружаем актеров для выбранного фильма
+            LoadActorsAsync(movie.Id);  // Загружаем актеров для выбранного фильмаы
         }
 
         public async Task LoadActorsAsync(int movieId)
