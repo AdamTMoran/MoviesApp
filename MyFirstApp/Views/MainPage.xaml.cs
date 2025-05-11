@@ -2,16 +2,20 @@
 using MyFirstApp.Services;
 using MyFirstApp.ViewModels;
 using MyFirstApp.Views;
+using System.Linq;
+
 namespace MyFirstApp
 {
     public partial class MainPage : ContentPage
     {
         private bool isLoaded = false;
+        private readonly IDatabaseService _databaseService;
 
-        public MainPage(MoviesViewModel viewModel)
+        public MainPage(MoviesViewModel viewModel, IDatabaseService databaseService)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            BindingContext = viewModel;  // Привязываем ViewModel к BindingContext
+            _databaseService = databaseService;
         }
 
         protected override async void OnAppearing()
@@ -25,25 +29,23 @@ namespace MyFirstApp
             }
         }
 
+        // Обработчик события для выбора фильма
         private async void OnMovieTapped(object sender, SelectionChangedEventArgs e)
         {
-            if (e.CurrentSelection.FirstOrDefault() is MovieViewItem selectedMovieViewItem)
+            if (e.CurrentSelection.FirstOrDefault() is MovieViewItem selectedMovie)
             {
-                // Создаём Movie на основе данных из MovieViewItem
-                var movie = new Movie
-                {
-                    Id = selectedMovieViewItem.Id,
-                    Title = selectedMovieViewItem.Title,
-                    Genre = selectedMovieViewItem.Genre,
-                    Poster = selectedMovieViewItem.Poster
-                };
+                // Создание ViewModel для страницы деталей фильма
+                var movieDetailViewModel = new MovieDetailViewModel(new Movie { Id = selectedMovie.Id, Title = selectedMovie.Title }, _databaseService);
 
-                // Навигация на детальную страницу фильма
-                await Navigation.PushAsync(new MovieDetailPage(movie));
-                ((CollectionView)sender).SelectedItem = null; // Сброс выбора
+                // Создание страницы с деталями фильма
+                var page = new MovieDetailPage(movieDetailViewModel);
+
+                // Переход на страницу деталей фильма
+                await Navigation.PushAsync(page);
+
+                // Снимаем выделение с выбранного элемента в CollectionView
+                ((CollectionView)sender).SelectedItem = null;
             }
         }
     }
-
 }
-

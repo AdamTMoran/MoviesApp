@@ -1,33 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MyFirstApp.Models;
 using MyFirstApp.Services;
 using MyFirstApp.DTOs;
+using Microsoft.Maui.ApplicationModel;
 
 namespace MyFirstApp.ViewModels
 {
     public class MoviesViewModel : INotifyPropertyChanged
     {
         private readonly IMovieSearchService _searchService;
-        public ObservableCollection<MovieViewItem> Movies { get; set; } = new();
-       
-        private string searchQuery;
+
+        public ObservableCollection<MovieViewItem> Movies { get; set; } = new ObservableCollection<MovieViewItem>();
+
+        private string _searchQuery;
+        private CancellationTokenSource _cancellationTokenSource;
+
         public string SearchQuery
         {
-            get => searchQuery;
+            get => _searchQuery;
             set
             {
-                if (searchQuery != value)
+                if (_searchQuery != value)
                 {
-                    searchQuery = value;
+                    _searchQuery = value;
                     OnPropertyChanged();
-                    _ = SearchMoviesAsync();  // Мы вызываем асинхронный метод поиска фильмов
+                    StartSearch(_searchQuery); // Новый метод
                 }
             }
         }
@@ -36,61 +38,98 @@ namespace MyFirstApp.ViewModels
         {
             _searchService = searchService;
         }
-        // Метод загрузки всех фильмов
+
+        private void StartSearch(string query)
+        {
+            // Отменить предыдущий поиск, если он ещё идёт
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
+            var token = _cancellationTokenSource.Token;
+
+            // Асинхронный запуск нового поиска
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await SearchMoviesAsync(query, token);
+                }
+                catch (OperationCanceledException)
+                {
+                    // Поиск отменён — можно игнорировать
+                }
+            });
+        }
+
         public async Task LoadMoviesAsync()
         {
-            var results = await _searchService.SearchMoviesAsync(""); // пустой запрос = все фильмы
+            var results = await _searchService.SearchMoviesAsync("");
 
-            Movies.Clear();
-
-            foreach (var dto in results)
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                // Преобразование MovieDto в MovieViewItem
-                Movies.Add(new MovieViewItem
+                Movies.Clear();
+                foreach (var dto in results)
                 {
-                    Id = dto.Id,
-                    Title = dto.Title,
-                    Genre = dto.Genre,
-                    Poster = dto.Poster,
-                    Actors = dto.Actors
-                });
-            }
+                    Movies.Add(new MovieViewItem
+                    {
+                        Id = dto.Id,
+                        Title = dto.Title,
+                        Genre = dto.Genre,
+                        Poster = dto.Poster,
+                        Actors = dto.Actors
+                    });
+                }
+            });
         }
 
-        // Метод для поиска фильмов
-        public async Task SearchMoviesAsync()
+        public async Task SearchMoviesAsync(string query, CancellationToken token)
         {
-            var results = await _searchService.SearchMoviesAsync(searchQuery);
+            token.ThrowIfCancellationRequested();
 
-            Movies.Clear();
-
-            foreach (var dto in results)
+            if (string.IsNullOrWhiteSpace(query))
             {
-                // Преобразование MovieDto в MovieViewItem
-                Movies.Add(new MovieViewItem
-                {
-                    Id = dto.Id,
-                    Title = dto.Title,
-                    Genre = dto.Genre,
-                    Poster = dto.Poster,
-                    Actors = dto.Actors
-                });
+                await LoadMoviesAsync();
+                return;
             }
+
+            var allMovies = await _searchService.SearchMoviesAsync("");
+            token.ThrowIfCancellationRequested();
+
+            var filteredMovies = allMovies
+                .Where(movie =>
+                    movie.Title.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    movie.Actors.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    movie.Genre.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Movies.Clear();
+                foreach (var dto in filteredMovies)
+                {
+                    Movies.Add(new MovieViewItem
+                    {
+                        Id = dto.Id,
+                        Title = dto.Title,
+                        Genre = dto.Genre,
+                        Poster = dto.Poster,
+                        Actors = dto.Actors
+                    });
+                }
+            });
         }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
-
         protected void OnPropertyChanged([CallerMemberName] string name = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
     }
 
-    // Вспомогательный класс для отображения фильма в UI
     public class MovieViewItem
     {
         public int Id { get; set; }
         public string Title { get; set; } = "";
         public string Genre { get; set; } = "";
         public string Poster { get; set; } = "";
-        public string Actors { get; set; } = ""; // Строка с именами актёров
+        public string Actors { get; set; } = "";
     }
 }

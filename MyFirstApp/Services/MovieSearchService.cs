@@ -6,15 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MyFirstApp.DTOs;
+
 namespace MyFirstApp.Services
 {
     public class MovieSearchService : IMovieSearchService
     {
         private readonly SQLiteAsyncConnection _db;
 
-        public MovieSearchService()
+        public MovieSearchService(IDatabaseService databaseService)
         {
-            _db = DatabaseService.GetConnection();
+            _db = databaseService.GetConnection();
         }
 
         public async Task<List<MovieDto>> SearchMoviesAsync(string query)
@@ -54,11 +55,9 @@ namespace MyFirstApp.Services
                 .Select(g => g.First())
                 .ToList();
 
-            // Получаем все связи и актёров
             var allMovieActorLinks = await _db.Table<MovieActor>().ToListAsync();
             var allActors = await _db.Table<Actor>().ToListAsync();
 
-            // Преобразуем в DTO
             var result = uniqueMovies.Select(movie =>
             {
                 var actorIds = allMovieActorLinks
@@ -81,5 +80,6 @@ namespace MyFirstApp.Services
 
             return result;
         }
+
     }
 }

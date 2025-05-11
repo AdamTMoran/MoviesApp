@@ -1,27 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MyFirstApp.Models;
-using MyFirstApp.Services;
+﻿using MyFirstApp.Models;
 using MyFirstApp.ViewModels;
 
 namespace MyFirstApp.Views
 {
     public partial class MovieDetailPage : ContentPage
     {
-        public MovieDetailPage(Movie movie)
+        public MovieDetailPage(MovieDetailViewModel viewModel)
         {
             InitializeComponent();
-
-            var vm = new MovieDetailViewModel(movie);
-            BindingContext = vm;
-
-            // Загрузим актёров вручную
-            _ = vm.LoadActorsAsync(movie.Id);
+            BindingContext = viewModel; // Привязываем ViewModel
         }
     }
-
 }
-
