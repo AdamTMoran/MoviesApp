@@ -30,4 +30,9 @@ MovieViewItem — модель для отображения в UI.
 Функция поиска реализована в MoviesViewModel. При вводе текста фильтруются фильмы по названию, с задержкой в 500 мс, чтобы избежать избыточных запросов:
 
 ![image](https://github.com/user-attachments/assets/afa46ed7-3076-4b9f-af36-ed1203d1e784)
+![image](https://github.com/user-attachments/assets/7f3b3d41-d249-4c6d-814b-4b175944f778)
+![image](https://github.com/user-attachments/assets/02a8a4b9-e959-4d0c-8ff8-31ca02c3e4a5)
+![image](https://github.com/user-attachments/assets/8a12e119-b30f-4c55-90a1-14299356e6ad)
+
+
 
