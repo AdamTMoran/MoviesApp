@@ -32,6 +32,7 @@ MovieViewItem — модель для отображения в UI.
 ![image](https://github.com/user-attachments/assets/afa46ed7-3076-4b9f-af36-ed1203d1e784)
 ## Поиск фильма
 ![image](https://github.com/user-attachments/assets/7f3b3d41-d249-4c6d-814b-4b175944f778)
+## Поиск фильма
 ![image](https://github.com/user-attachments/assets/02a8a4b9-e959-4d0c-8ff8-31ca02c3e4a5)
 ## Вкладка с описанием фильма
 ![image](https://github.com/user-attachments/assets/6285fcf8-6030-4a13-ac18-8dbaf4390642)
