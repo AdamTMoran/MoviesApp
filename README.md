@@ -9,3 +9,25 @@ MoviesApp — это мобильное кросс-платформенное п
 - **MVVM (Model-View-ViewModel)**: Используется для разделения представления, бизнес-логики и данных.
 - **DTO (Data Transfer Objects)**: Для передачи данных между слоями.
 - **LINQ**: Применяется для фильтрации и обработки коллекций данных.
+## Установка и запуск
+1. Клонируйте репозиторий
+    git clone https://github.com/yourusername/MyFirstApp.git
+    cd MyFirstApp
+2. Откройте проект в Visual Studio
+Убедитесь, что установлен .NET SDK версии 8+ и рабочая нагрузка .NET MAUI.
+3. Запустите приложение
+Выберите платформу (Android/iOS/Windows) и нажмите Run (F5) в Visual Studio.
+## Основные компоненты
+### ViewModel
+MoviesViewModel содержит логику отображения и поиска фильмов, работает с IMovieSearchService, использует ObservableCollection и реализует INotifyPropertyChanged.
+### Services
+Интерфейс IMovieSearchService и его реализация отвечают за поиск фильмов в базе данных.
+### Models & DTOs
+Movie — основная модель данных.
+MovieDto — объект передачи данных.
+MovieViewItem — модель для отображения в UI.
+## Поиск фильмов
+Функция поиска реализована в MoviesViewModel. При вводе текста фильтруются фильмы по названию, с задержкой в 500 мс, чтобы избежать избыточных запросов:
+
+![image](https://github.com/user-attachments/assets/afa46ed7-3076-4b9f-af36-ed1203d1e784)
+
